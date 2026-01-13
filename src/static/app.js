@@ -519,6 +519,11 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
+    // Escape data for HTML attributes
+    const escapedName = name.replace(/"/g, '&quot;');
+    const escapedDescription = details.description.replace(/"/g, '&quot;');
+    const escapedSchedule = formattedSchedule.replace(/"/g, '&quot;');
+
     activityCard.innerHTML = `
       ${tagHtml}
       <h4>${name}</h4>
@@ -554,16 +559,16 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="social-share">
         <span class="share-label">Share:</span>
-        <button class="share-button twitter" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share on Twitter">
+        <button class="share-button twitter" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on Twitter">
           <span class="share-icon">𝕏</span>
         </button>
-        <button class="share-button facebook" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share on Facebook">
+        <button class="share-button facebook" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on Facebook">
           <span class="share-icon">f</span>
         </button>
-        <button class="share-button linkedin" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share on LinkedIn">
+        <button class="share-button linkedin" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on LinkedIn">
           <span class="share-icon">in</span>
         </button>
-        <button class="share-button email" data-activity="${name}" data-description="${details.description.replace(/"/g, '&quot;')}" data-schedule="${formattedSchedule.replace(/"/g, '&quot;')}" title="Share via Email">
+        <button class="share-button email" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share via Email">
           <span class="share-icon">✉</span>
         </button>
       </div>
@@ -618,8 +623,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const description = button.dataset.description;
     const schedule = button.dataset.schedule;
     
-    // Create shareable URL (current page URL)
-    const pageUrl = window.location.href.split('?')[0];
+    // Create shareable URL (current page URL without query params for cleaner sharing)
+    const pageUrl = window.location.origin + window.location.pathname;
     
     // Create share text
     const shareText = `Check out ${activityName} at Mergington High School! ${description} Schedule: ${schedule}`;
@@ -633,7 +638,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`;
       window.open(facebookUrl, '_blank', 'width=550,height=420');
     } else if (button.classList.contains('linkedin')) {
-      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
+      // LinkedIn sharing with title and summary
+      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareTitle)}&summary=${encodeURIComponent(description)}`;
       window.open(linkedinUrl, '_blank', 'width=550,height=420');
     } else if (button.classList.contains('email')) {
       const emailSubject = encodeURIComponent(shareTitle);
