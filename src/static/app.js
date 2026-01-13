@@ -519,10 +519,19 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Escape data for HTML attributes
-    const escapedName = name.replace(/"/g, '&quot;');
-    const escapedDescription = details.description.replace(/"/g, '&quot;');
-    const escapedSchedule = formattedSchedule.replace(/"/g, '&quot;');
+    // Escape data for HTML attributes to prevent XSS
+    const escapeHtml = (str) => {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    };
+    
+    const escapedName = escapeHtml(name);
+    const escapedDescription = escapeHtml(details.description);
+    const escapedSchedule = escapeHtml(formattedSchedule);
 
     activityCard.innerHTML = `
       ${tagHtml}
@@ -632,14 +641,14 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Determine which platform to share to
     if (button.classList.contains('twitter')) {
-      const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
+      const twitterUrl = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(pageUrl)}`;
       window.open(twitterUrl, '_blank', 'width=550,height=420');
     } else if (button.classList.contains('facebook')) {
       const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(pageUrl)}&quote=${encodeURIComponent(shareText)}`;
       window.open(facebookUrl, '_blank', 'width=550,height=420');
     } else if (button.classList.contains('linkedin')) {
-      // LinkedIn sharing with title and summary
-      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}&title=${encodeURIComponent(shareTitle)}&summary=${encodeURIComponent(description)}`;
+      // LinkedIn sharing - parameters like title and summary are no longer supported
+      const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(pageUrl)}`;
       window.open(linkedinUrl, '_blank', 'width=550,height=420');
     } else if (button.classList.contains('email')) {
       const emailSubject = encodeURIComponent(shareTitle);
