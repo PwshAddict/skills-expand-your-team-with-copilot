@@ -572,16 +572,16 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
       <div class="social-share">
         <span class="share-label">Share:</span>
-        <button class="share-button twitter" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on Twitter">
+        <button class="share-button twitter" data-activity="${name}" data-description="${details.description}" data-schedule="${formattedSchedule}" title="Share on Twitter">
           <span class="share-icon">𝕏</span>
         </button>
-        <button class="share-button facebook" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on Facebook">
+        <button class="share-button facebook" data-activity="${name}" data-description="${details.description}" data-schedule="${formattedSchedule}" title="Share on Facebook">
           <span class="share-icon">f</span>
         </button>
-        <button class="share-button linkedin" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share on LinkedIn">
+        <button class="share-button linkedin" data-activity="${name}" data-description="${details.description}" data-schedule="${formattedSchedule}" title="Share on LinkedIn">
           <span class="share-icon">in</span>
         </button>
-        <button class="share-button email" data-activity="${escapedName}" data-description="${escapedDescription}" data-schedule="${escapedSchedule}" title="Share via Email">
+        <button class="share-button email" data-activity="${name}" data-description="${details.description}" data-schedule="${formattedSchedule}" title="Share via Email">
           <span class="share-icon">✉</span>
         </button>
       </div>
