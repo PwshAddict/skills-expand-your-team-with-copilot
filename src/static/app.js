@@ -44,6 +44,16 @@ document.addEventListener("DOMContentLoaded", () => {
   // Authentication state
   let currentUser = null;
 
+  // Helper function to escape HTML to prevent XSS
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   // Time range mappings for the dropdown
   const timeRanges = {
     morning: { start: "06:00", end: "08:00" }, // Before school hours
@@ -499,6 +509,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // Format the schedule using the new helper function
     const formattedSchedule = formatSchedule(details);
 
+    // Escape data for HTML to prevent XSS
+    const escapedName = escapeHtml(name);
+    const escapedDescription = escapeHtml(details.description);
+    const escapedSchedule = escapeHtml(formattedSchedule);
+
     // Create activity tag
     const tagHtml = `
       <span class="activity-tag" style="background-color: ${typeInfo.color}; color: ${typeInfo.textColor}">
@@ -519,26 +534,12 @@ document.addEventListener("DOMContentLoaded", () => {
       </div>
     `;
 
-    // Escape data for HTML attributes to prevent XSS
-    const escapeHtml = (str) => {
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    };
-    
-    const escapedName = escapeHtml(name);
-    const escapedDescription = escapeHtml(details.description);
-    const escapedSchedule = escapeHtml(formattedSchedule);
-
     activityCard.innerHTML = `
       ${tagHtml}
-      <h4>${name}</h4>
-      <p>${details.description}</p>
+      <h4>${escapedName}</h4>
+      <p>${escapedDescription}</p>
       <p class="tooltip">
-        <strong>Schedule:</strong> ${formattedSchedule}
+        <strong>Schedule:</strong> ${escapedSchedule}
         <span class="tooltip-text">Regular meetings at this time throughout the semester</span>
       </p>
       ${capacityIndicator}
@@ -547,13 +548,15 @@ document.addEventListener("DOMContentLoaded", () => {
         <ul>
           ${details.participants
             .map(
-              (email) => `
+              (email) => {
+                const escapedEmail = escapeHtml(email);
+                return `
             <li>
-              ${email}
+              ${escapedEmail}
               ${
                 currentUser
                   ? `
-                <span class="delete-participant tooltip" data-activity="${name}" data-email="${email}">
+                <span class="delete-participant tooltip" data-activity="${escapedName}" data-email="${escapedEmail}">
                   ✖
                   <span class="tooltip-text">Unregister this student</span>
                 </span>
@@ -561,7 +564,8 @@ document.addEventListener("DOMContentLoaded", () => {
                   : ""
               }
             </li>
-          `
+          `;
+              }
             )
             .join("")}
         </ul>
@@ -585,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ${
           currentUser
             ? `
-          <button class="register-button" data-activity="${name}" ${
+          <button class="register-button" data-activity="${escapedName}" ${
                 isFull ? "disabled" : ""
               }>
             ${isFull ? "Activity Full" : "Register Student"}
