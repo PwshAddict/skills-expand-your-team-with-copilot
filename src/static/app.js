@@ -8,6 +8,44 @@ document.addEventListener("DOMContentLoaded", () => {
   const activityInput = document.getElementById("activity");
   const closeRegistrationModal = document.querySelector(".close-modal");
 
+  // Dark mode toggle
+  const darkModeToggle = document.getElementById("dark-mode-toggle");
+  
+  // Initialize dark mode from localStorage
+  function initializeDarkMode() {
+    const isDarkMode = localStorage.getItem("darkMode") === "true";
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+      updateDarkModeButton(true);
+    }
+  }
+  
+  // Update dark mode button appearance
+  function updateDarkModeButton(isDark) {
+    const icon = darkModeToggle.querySelector(".icon");
+    const text = darkModeToggle.querySelector("span:not(.icon)");
+    if (isDark) {
+      icon.textContent = "☀️";
+      text.textContent = "Light";
+    } else {
+      icon.textContent = "🌙";
+      text.textContent = "Dark";
+    }
+  }
+  
+  // Toggle dark mode
+  function toggleDarkMode() {
+    const isDarkMode = document.body.classList.toggle("dark-mode");
+    localStorage.setItem("darkMode", isDarkMode);
+    updateDarkModeButton(isDarkMode);
+  }
+  
+  // Add event listener for dark mode toggle
+  darkModeToggle.addEventListener("click", toggleDarkMode);
+  
+  // Initialize dark mode on page load
+  initializeDarkMode();
+
   // Search and filter elements
   const searchInput = document.getElementById("activity-search");
   const searchButton = document.getElementById("search-button");
