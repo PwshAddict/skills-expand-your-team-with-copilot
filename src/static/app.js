@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Initialize dark mode from localStorage
   function initializeDarkMode() {
+    if (!darkModeToggle) return;
     const isDarkMode = localStorage.getItem("darkMode") === "true";
     if (isDarkMode) {
       document.body.classList.add("dark-mode");
@@ -22,14 +23,17 @@ document.addEventListener("DOMContentLoaded", () => {
   
   // Update dark mode button appearance
   function updateDarkModeButton(isDark) {
+    if (!darkModeToggle) return;
     const icon = darkModeToggle.querySelector(".icon");
-    const text = darkModeToggle.querySelector("span:not(.icon)");
+    const textSpan = darkModeToggle.children[1];
+    if (!icon || !textSpan) return;
+    
     if (isDark) {
       icon.textContent = "☀️";
-      text.textContent = "Light";
+      textSpan.textContent = "Light";
     } else {
       icon.textContent = "🌙";
-      text.textContent = "Dark";
+      textSpan.textContent = "Dark";
     }
   }
   
@@ -41,7 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   
   // Add event listener for dark mode toggle
-  darkModeToggle.addEventListener("click", toggleDarkMode);
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener("click", toggleDarkMode);
+  }
   
   // Initialize dark mode on page load
   initializeDarkMode();
